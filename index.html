@@ -67,7 +67,7 @@
     async function UpdateUser() {
       const userData = JSON.parse(localStorage.getItem('userData'));
       const user = userData[0];
-      await postReq(`${BASE_URL}UpdateUsers`, user)
+      await postReq(`${BASE_URL}UpdateUser`, user)
         .then(data => data.json()).then(obj => {
           alert(obj);
         });
@@ -76,7 +76,7 @@
     async function DeleteUser() {
       const userData = JSON.parse(localStorage.getItem('userData'));
       const user = userData[0];
-      await postReq(`${BASE_URL}DeleteUsers`, user)
+      await postReq(`${BASE_URL}DeleteUser`, user)
         .then(data => data.json()).then(obj => {
           alert(obj);
         });
@@ -93,11 +93,9 @@
 
     async function CreateUser() {
       const Users = [{
-        "userId": "e842edba-1269-442d-91e6-36e8c2e5313c",
         "name": "Hans",
         "cityId": 1
       }, {
-        "userId": "cef48c14-40c7-4c5f-88a3-bbd1f4e25f2e",
         "name": "Allen",
         "cityId": 2
       }]
@@ -130,7 +128,7 @@
 
 <body>
   <button onclick="CreateUser()">Create User</button>
-  <button onclick="GetUsers()">Get Users</button>
+  <button onclick="GetUsers()">Get Users(Refresh Table)</button>
   <button onclick="UpdateUser()">Update First User's Name</button>
   <button onclick="DeleteUser()">Delete all except First User</button>
   <button onclick="DeleteAll()">Delete Everything / Restart</button>
