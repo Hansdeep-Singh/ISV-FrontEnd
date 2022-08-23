@@ -1,0 +1,143 @@
+<html lang="en">
+
+<head>
+  <script>
+
+    const BASE_URL = "https://localhost:7070/User/"
+
+    async function postReq(url = '', data = {}) {
+      const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(data)
+      });
+      return response;
+    }
+
+
+    async function getReq(url = '') {
+      const response = fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+
+      });
+      return response;
+    }
+
+
+
+
+    async function GetUsers() {
+
+      await getReq(`${BASE_URL}GetUsers`)
+        .then(data => data.json()).then(obj => {
+          localStorage.setItem('userData', JSON.stringify(obj));
+          console.log(obj);
+
+          var table = document.getElementById("userData");
+          table.innerHTML = "";
+          obj.forEach(element => {
+            var row = table.insertRow(0);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            cell1.innerHTML = element.userId;
+            cell2.innerHTML = element.name;
+            cell3.innerHTML = element.cityName;
+          });
+          var row = table.insertRow(0);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          cell1.innerHTML = "ID";
+          cell2.innerHTML = "NAME";
+          cell3.innerHTML = "CITY";
+
+        });
+
+
+    }
+
+    async function UpdateUser() {
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const user = userData[0];
+      await postReq(`${BASE_URL}UpdateUsers`, user)
+        .then(data => data.json()).then(obj => {
+          alert(obj);
+        });
+    }
+
+    async function DeleteUser() {
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const user = userData[0];
+      await postReq(`${BASE_URL}DeleteUsers`, user)
+        .then(data => data.json()).then(obj => {
+          alert(obj);
+        });
+    }
+
+    async function DeleteAll() {
+      var table = document.getElementById("userData");
+      table.innerHTML = "";
+      await postReq(`${BASE_URL}DeleteAll`)
+        .then(data => data.json()).then(obj => {
+          alert(obj);
+        });
+    }
+
+    async function CreateUser() {
+      const Users = [{
+        "userId": "e842edba-1269-442d-91e6-36e8c2e5313c",
+        "name": "Hans",
+        "cityId": 1
+      }, {
+        "userId": "cef48c14-40c7-4c5f-88a3-bbd1f4e25f2e",
+        "name": "Allen",
+        "cityId": 2
+      }]
+      const Cities = [{
+        "cityId": 1,
+        "cityName": "Melbourne",
+      }, {
+        "cityId": 2,
+        "cityName": "Sydney",
+      },
+      {
+        "cityId": 3,
+        "cityName": "Perth",
+      },]
+
+      const request = {
+        "Users": Users,
+        "Cities": Cities
+      }
+
+      localStorage.setItem('request', request);
+      await postReq('https://localhost:7070/User/CreateUser', request)
+        .then((data) => {
+          console.log(data);
+        });
+    }
+
+  </script>
+</head>
+
+<body>
+  <button onclick="CreateUser()">Create User</button>
+  <button onclick="GetUsers()">Get Users</button>
+  <button onclick="UpdateUser()">Update First User's Name</button>
+  <button onclick="DeleteUser()">Delete all except First User</button>
+  <button onclick="DeleteAll()">Delete Everything / Restart</button>
+  <br />
+  <table id="userData">
+  </table>
+
+</body>
+
+</html>
